@@ -1,4 +1,5 @@
 import { turso } from "@/lib/turso"
+import { deleteProjectFromCloudinary } from "@/lib/cloudinary"
 
 const insertNewProject = async (project: { name: any; slug: any; description: any; projectType: any; primaryColor: any; secondaryColor: any; tertiaryColor: any; accentColor: any; textColor: any; typography: any; userId: any; }) => {
 
@@ -259,4 +260,41 @@ const insertNewImages = async (images: { projectId: any; imageUrls: any; }) => {
   return { success: true };
 }
 
-export { insertNewProject, getProjectsByUser, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus };
+const deleteProject = async (projectId: string, userId: string, slug: string) => {
+  if (!projectId || !userId || !slug) {
+    throw {
+      message: 'El ID del proyecto, el ID del usuario y el slug son obligatorios',
+      status: 400,
+    }
+  }
+
+  // Obtener las imágenes asociadas al proyecto
+  const images = await getImagesByProjectId(projectId);
+  const { rows: imagesRows } = images;
+
+  if (imagesRows.length > 0) {
+    // Eliminar las imágenes asociadas al proyecto
+    await turso.execute(
+      `DELETE FROM images WHERE project_id = ?`,
+      [projectId]
+    );
+    
+    // Eliminar el proyecto de Cloudinary
+    await deleteProjectFromCloudinary(`${userId}/projects/${projectId}-${slug}`);
+  }
+
+  // Eliminar las palabras clave asociadas al proyecto
+  await turso.execute(
+    `DELETE FROM keywords WHERE project_id = ?`,
+    [projectId]
+  );
+
+  // Eliminar el proyecto de la base de datos
+  await turso.execute(
+    `DELETE FROM projects WHERE id = ?`,
+    [projectId]
+  );
+}
+
+
+export { insertNewProject, getProjectsByUser, deleteProject, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus };
