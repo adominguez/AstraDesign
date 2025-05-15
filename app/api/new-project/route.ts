@@ -3,21 +3,7 @@ import { openai } from '@ai-sdk/openai';
 import { currentUser } from "@clerk/nextjs/server";
 import { insertNewProject, insertNewImages, insertKeywords, updateProjectStatus } from '@/lib/projects';
 import { createSlug } from '@/lib/utils';
-import { v2 as cloudinary } from 'cloudinary';
-import { Readable } from 'stream';
-
-// Configuration cloudinary
-cloudinary.config({
-  cloud_name: process.env.PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
-});
-
-// Función auxiliar para convertir un File a un Buffer
-async function fileToBuffer(file: File): Promise<Buffer> {
-  const arrayBuffer = await file.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-}
+import { uploadImagesToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(req: Request) {
   try {
@@ -83,44 +69,14 @@ export async function POST(req: Request) {
 
     // Guardamos las imágenes en Cloudinary
     if (images && images.length > 0) {
-      const imageUrls = await Promise.all(
-        images.map(async (image: File) => {
-          const buffer = await fileToBuffer(image); // Convierte el archivo a Buffer
-      
-          // Usa una promesa explícita para manejar el stream
-          return new Promise<{ url: string; width: number; height: number; format: string; assetFolder: string; publicId: string; }>((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-              {
-                folder: `projects/${projectId}-${slug}`,
-                public_id: `${userId}-${slug}-${Date.now()}`,
-                overwrite: true,
-                resource_type: 'image',
-              },
-              (error, result) => {
-                if (error) {
-                  throw {
-                    message: 'Error uploading image',
-                    status: 500,
-                    projectId: projectId,
-                  }
-                } else {
-                  // Resuelve la promesa con la URL de la imagen 
-                  resolve({
-                    url: result?.secure_url || '' as string,
-                    width: result?.width || 0,
-                    height: result?.height || 0,
-                    format: result?.format || '',
-                    assetFolder: result?.asset_folder || '',
-                    publicId: result?.public_id || '',
-                  });
-                }
-              }
-            );
-      
-            // Crea un stream legible desde el buffer y conéctalo al stream de subida
-            Readable.from(buffer).pipe(uploadStream);
-          });
-        })
+      const imageUrls = await uploadImagesToCloudinary(
+        images,
+        {
+          folder: `${userId}/projects/${projectId}-${slug}`,
+          public_id: `${userId}-${slug}`,
+          overwrite: true,
+          resource_type: 'image',
+        }, projectId
       );
 
       // Guardamos las URLs de las imágenes en la base de datos
@@ -133,7 +89,21 @@ export async function POST(req: Request) {
     // Actualizamos el estado del proyecto a "completado"
     await updateProjectStatus({ projectId, status: 'OK' });
 
-    return new Response(JSON.stringify({ form }), {
+    return new Response(JSON.stringify({
+      message: 'Project created successfully',
+      projectId,
+      slug,
+      name,
+      description,
+      projectType,
+      keywords,
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
+      accentColor,
+      textColor,
+      typography
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });

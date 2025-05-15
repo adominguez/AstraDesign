@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MoreHorizontal, PlusCircle, Search, Layers, Eye } from "lucide-react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -29,6 +28,21 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
       project.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.type.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  const handleDeleteProject = (projectId: string, slug: string) => {
+    fetch("/api/delete-project", {
+      method: "DELETE",
+      body: JSON.stringify({ projectId, slug: slug }),
+    }).then((res) => {
+      if (res.status === 200) {
+        alert("Proyecto eliminado correctamente")
+        window.location.reload()
+      }
+    }).catch((error) => {
+      console.error("Error al eliminar el proyecto:", error)
+      alert("Error al eliminar el proyecto")
+    })
+  }
 
   return (
     <div className="space-y-4">
@@ -88,7 +102,7 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
                       </Link>
                       <DropdownMenuItem className="hover:bg-slate-900">Editar proyecto</DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-slate-800" />
-                      <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500">
+                      <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500" onClick={() => handleDeleteProject(project.id, project.slug)}>
                         Eliminar proyecto
                       </DropdownMenuItem>
                     </DropdownMenuContent>

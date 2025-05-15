@@ -18,11 +18,28 @@ interface ProjectHeaderProps {
     id: string
     name: string
     status: string
-    type: string
+    type: string,
+    slug: string
   }
 }
 
 export function ProjectHeader({ project }: ProjectHeaderProps) {
+
+  const handleDeleteProject = (projectId: string, slug: string) => {
+    fetch("/api/delete-project", {
+      method: "DELETE",
+      body: JSON.stringify({ projectId, slug }),
+    }).then((res) => {
+      if (res.status === 200) {
+        // Redirigir a la página de proyectos después de eliminar
+        window.location.href = "/admin/projects"
+      }
+    }).catch((error) => {
+      console.error("Error al eliminar el proyecto:", error)
+      alert("Error al eliminar el proyecto")
+    })
+  }
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-1">
@@ -69,7 +86,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:bg-slate-900">Duplicar proyecto</DropdownMenuItem>
             <DropdownMenuSeparator className="bg-slate-800" />
-            <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500">
+            <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500" onClick={() => handleDeleteProject(project.id, project.slug)}>
               Eliminar proyecto
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -96,9 +96,14 @@ export function NewProjectForm() {
       if (res.status === 200) {
         res.json().then((data) => {
           console.log(data)
+          const { slug } = data
           setIsLoading(false)
           form.reset()
           setUploadedImages([])
+
+          // Redireccionar a la página del proyecto
+          window.location.href = `/admin/projects/${slug}`
+
         })
       }
     }).catch((error) => {
