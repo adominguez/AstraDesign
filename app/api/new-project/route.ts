@@ -4,6 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { insertNewProject, insertNewImages, insertKeywords, updateProjectStatus } from '@/lib/projects';
 import { createSlug } from '@/lib/utils';
 import { uploadImagesToCloudinary } from '@/lib/cloudinary';
+import { generateBuyerPersonaForProject, insertBuyerPersona } from '@/lib/buyer-persona';
 
 export async function POST(req: Request) {
   try {
@@ -57,6 +58,15 @@ export async function POST(req: Request) {
     if (!projectId) {
       // Lanzar un error si no se ha insertado el proyecto
       throw { message: 'Failed to insert project', status: 500 };
+    }
+
+    const prompt = `Genera un buyer persona para un proyecto de tipo ${projectType} con la siguiente descripción: ${description}.`;
+
+    const buyerPersona = await generateBuyerPersonaForProject(prompt)
+
+    if (buyerPersona) {
+      // Guardamos el buyer persona en la base de datos
+      await insertBuyerPersona( buyerPersona, projectId);
     }
 
     // Guardamos las palabras clave en la base de datos
