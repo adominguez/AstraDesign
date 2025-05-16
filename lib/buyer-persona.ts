@@ -1,14 +1,10 @@
 import { generateObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { BuyerPersonaSchema } from '@/app/api/buyer-persona/schema';
-import { getProjectById } from '@/lib/projects';
-import { currentUser } from "@clerk/nextjs/server";
 import { turso } from "@/lib/turso"
+import { BuyerPersona } from '@/types/projects';
 
 export const generateBuyerPersonaForProject = async (prompt: string) => {
-
-  const user = await currentUser();
-  const userId = user?.id as string;
 
   if (!prompt) {
     throw {
@@ -36,7 +32,7 @@ export const generateBuyerPersonaForProject = async (prompt: string) => {
   return await buyerPersona.json();
 }
 
-export const insertBuyerPersona = async (buyerPersona: any, projectId: string) => {
+export const insertBuyerPersona = async (projectId: string, buyerPersona: BuyerPersona) => {
 
   if (!buyerPersona || !projectId) {
     throw {
@@ -46,10 +42,11 @@ export const insertBuyerPersona = async (buyerPersona: any, projectId: string) =
   }
 
   await turso.execute(`
-    INSERT INTO buyer_personas (project_id, demographics, family, work, behaviors, problems, solutions, barriers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO buyer_personas (project_id, name, demographics, family, work, behaviors, problems, solutions, barriers)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `, [
     projectId,
+    JSON.stringify(buyerPersona.name),
     JSON.stringify(buyerPersona.demographics),
     JSON.stringify(buyerPersona.family),
     JSON.stringify(buyerPersona.work),

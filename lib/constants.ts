@@ -31,6 +31,38 @@ export const projectsTypes = [
   { value: 'consultoria-legal-financiera', label: 'Sitio de consultoría legal o financiera' }
 ]
 
+export const pagesTypes = [
+  { value: 'home', label: 'Página de inicio' },
+  { value: 'about', label: 'Página de presentación' },
+  { value: 'services', label: 'Página de servicios' },
+  { value: 'products', label: 'Página de productos' },
+  { value: 'blog', label: 'Página de blog' },
+  { value: 'contact', label: 'Página de contacto' },
+  { value: 'portfolio', label: 'Página de portafolio' },
+  { value: 'testimonials', label: 'Página de testimonios' },
+  { value: 'faq', label: 'Página de preguntas frecuentes' },
+  { value: 'terms', label: 'Página de términos y condiciones' },
+  { value: 'privacy', label: 'Página de política de privacidad' },
+  { value: 'gallery', label: 'Página de galería' },
+  { value: 'team', label: 'Página de equipo' },
+  { value: 'case-studies', label: 'Página de estudios de caso' },
+  { value: 'events', label: 'Página de eventos' },
+  { value: 'news', label: 'Página de noticias' },
+  { value: 'resources', label: 'Página de recursos' },
+  { value: 'careers', label: 'Página de carreras' },
+  { value: 'location', label: 'Página de ubicación' },
+  { value: 'login', label: 'Página de inicio de sesión' },
+  { value: 'signup', label: 'Página de registro' },
+  { value: 'checkout', label: 'Página de pago' },
+  { value: 'thank-you', label: 'Página de agradecimiento' },
+  { value: 'sitemap', label: 'Página de mapa del sitio' },
+  { value: '404', label: 'Página de error 404' },
+  { value: 'coming-soon', label: 'Página de pronto disponible' },
+  { value: 'maintenance', label: 'Página de mantenimiento' },
+  { value: 'custom', label: 'Página personalizada' },
+  { value: 'other', label: 'Otra página' },
+]
+
 export const colorPalettes = [
   { id: 'noche-sereno', name: 'Noche Sereno', primary: '#1b263b', secondary: '#415a77', tertiary: '#778da9', accent: '#e0e1dd', text: '#0d1b2a' },
   { id: 'brisa-marina', name: 'Brisa Marina', primary: '#264653', secondary: '#2a9d8f', tertiary: '#e9c46a', accent: '#f4a261', text: '#ffffff' },

@@ -1,7 +1,9 @@
 import { turso } from "@/lib/turso"
 import { deleteProjectFromCloudinary } from "@/lib/cloudinary"
+import { type ProjectDesign, type Project } from "@/types/projects"
+import { getPagesByProjectId } from "@/lib/pages"
 
-const insertNewProject = async (project: { name: any; slug: any; description: any; projectType: any; primaryColor: any; secondaryColor: any; tertiaryColor: any; accentColor: any; textColor: any; typography: any; userId: any; }) => {
+const insertNewProject = async (project: Project) => {
 
   if (!project) {
     throw { message: 'Es necesario proporcionar un proyecto', status: 400 }
@@ -12,18 +14,13 @@ const insertNewProject = async (project: { name: any; slug: any; description: an
   if (!project.description || !project.projectType) {
     throw { message: 'La descripción y el tipo de proyecto son obligatorios', status: 400 }
   }
-  if (!project.primaryColor || !project.secondaryColor || !project.tertiaryColor || !project.accentColor || !project.textColor || !project.typography) {
-    throw { message: 'Los colores y la tipografía del proyecto son obligatorios', status: 400 }
-  }
   if (typeof project.name !== 'string' || typeof project.slug !== 'string' || typeof project.userId !== 'string') {
     throw { message: 'El nombre del proyecto, el slug y el ID del usuario deben ser cadenas', status: 400 }
   }
   if (typeof project.description !== 'string' || typeof project.projectType !== 'string') {
     throw { message: 'La descripción y el tipo de proyecto deben ser cadenas', status: 400 }
   }
-  if (typeof project.primaryColor !== 'string' || typeof project.secondaryColor !== 'string' || typeof project.tertiaryColor !== 'string' || typeof project.accentColor !== 'string' || typeof project.textColor !== 'string' || typeof project.typography !== 'string') {
-    throw { message: 'Los colores y la tipografía del proyecto deben ser cadenas', status: 400 }
-  }
+
   if (project.name.length > 255 || project.slug.length > 255) {
     throw { message: 'El nombre del proyecto y el slug deben tener menos de 255 caracteres', status: 400 }
   }
@@ -33,18 +30,12 @@ const insertNewProject = async (project: { name: any; slug: any; description: an
   if (project.projectType.length > 255) {
     throw { message: 'El tipo de proyecto debe tener menos de 255 caracteres', status: 400 }
   }
-  if (project.primaryColor.length > 7 || project.secondaryColor.length > 7 || project.tertiaryColor.length > 7 || project.accentColor.length > 7 || project.textColor.length > 7) {
-    throw { message: 'Los colores del proyecto deben ser códigos hexadecimales válidos', status: 400 }
-  }
-  if (project.typography.length > 255) {
-    throw { message: 'La tipografía del proyecto debe tener menos de 255 caracteres', status: 400 }
-  }
 
-  const { name, slug, description, projectType, primaryColor, secondaryColor, tertiaryColor, accentColor, textColor, typography, userId } = project;
+  const { name, slug, description, projectType, userId, status } = project;
 
   await turso.execute(
-    `INSERT INTO projects (user_id, name, slug, description, project_type, primary_color, secondary_color, tertiary_color, accent_color, text_color, typography) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [userId, name, slug, description, projectType, primaryColor, secondaryColor, tertiaryColor, accentColor, textColor, typography]
+    `INSERT INTO projects (user_id, name, slug, description, project_type, status) VALUES (?, ?, ?, ?, ?, ?)`,
+    [userId, name, slug, description, projectType, status]
   );
 
   // Obtén el ID del último registro insertado
@@ -104,6 +95,24 @@ const insertKeywords = async ({ projectId, keywords }: { projectId: string; keyw
   }
 }
 
+const insertProjectDesign = async ({ projectId, projectDesign }: { projectId: string; projectDesign: ProjectDesign; }) => {
+  if (!projectId || !projectDesign) {
+    throw {
+      message: 'El ID del proyecto y el diseño son obligatorios',
+      status: 400,
+      projectId,
+    }
+  }
+  const { primaryColor, secondaryColor, tertiaryColor, accentColor, textColor, typography } = projectDesign;
+
+  await turso.execute(
+    `INSERT INTO projects_design (project_id, primary_color, secondary_color, tertiary_color, accent_color, text_color, typography) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [projectId, primaryColor, secondaryColor, tertiaryColor, accentColor, textColor, typography]
+  );
+  
+  return { success: true, projectId, projectDesign };
+}
+
 const getProjectById = async (projectId: string, userId: string) => {
   if (!projectId) {
     throw {
@@ -157,6 +166,36 @@ const getKeywordsByProjectId = async (projectId: string) => {
   return result;
 }
 
+const getBuyerPersonaByProjectId = async (projectId: string) => {
+  if (!projectId) {
+    throw {
+      message: 'El ID del proyecto es obligatorio',
+      status: 400,
+    }
+  }
+  const result = await turso.execute(
+    `SELECT * FROM buyer_personas WHERE project_id = ?`,
+    [projectId]
+  );
+
+  return result;
+}
+
+const getProjectDesignByProjectId = async (projectId: string) => {
+  if (!projectId) {
+    throw {
+      message: 'El ID del proyecto es obligatorio',
+      status: 400,
+    }
+  }
+  const result = await turso.execute(
+    `SELECT * FROM projects_design WHERE project_id = ?`,
+    [projectId]
+  );
+
+  return result;
+}
+
 const getProjectBySlug = async (slug: string, userId: string) => {
   if (!slug) {
     return null;
@@ -175,25 +214,42 @@ const getProjectBySlug = async (slug: string, userId: string) => {
   if (result.rows.length === 0) {
     return null
   }
+
   if (result.rows.length > 0) {
-    const { id, name, slug, description, project_type: type, status, created_at: created } = result.rows[0]
+    const { id, name, slug, description, project_type: projectType, status, created_at: created } = result.rows[0]
     if (id) {
       const images = await getImagesByProjectId(id as string);
       const keywords = await getKeywordsByProjectId(id as string);
+      const buyerPersona = await getBuyerPersonaByProjectId(id as string);
+      const projectDesign = await getProjectDesignByProjectId(id as string);
+      const pages = await getPagesByProjectId(id as string);
+      const { rows: projectDesignRows } = projectDesign;
       const { rows: imagesRows } = images;
       const { rows: keywordsRows } = keywords;
+      const { rows: buyerPersonaRows } = buyerPersona;
       const imagesData = imagesRows.map(({ id, asset_folder, format, height, public_id, url, width }) => ({ id, assetFolder: asset_folder, format, height, publicId: public_id, url, width }));
       const keywordsData = keywordsRows.map(({ id, keyword }) => ({ id, keyword }));
       const projectData = {
+        userId,
         id,
         name,
         description,
-        type,
+        projectType,
         status,
         created,
         slug,
         images: imagesData,
         keywords: keywordsData,
+        buyerPersona: buyerPersonaRows.length > 0 ? buyerPersonaRows[0] : null,
+        pages,
+        projectDesign: projectDesignRows.length > 0 ? {
+          primaryColor: projectDesignRows[0].primary_color,
+          secondaryColor: projectDesignRows[0].secondary_color,
+          tertiaryColor: projectDesignRows[0].tertiary_color,
+          accentColor: projectDesignRows[0].accent_color,
+          textColor: projectDesignRows[0].text_color,
+          typography: projectDesignRows[0].typography
+        } : null
       }
       return projectData;
     }
@@ -297,4 +353,4 @@ const deleteProject = async (projectId: string, userId: string, slug: string) =>
 }
 
 
-export { insertNewProject, getProjectsByUser, deleteProject, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus };
+export { insertNewProject, getProjectsByUser, deleteProject, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus, insertProjectDesign };
