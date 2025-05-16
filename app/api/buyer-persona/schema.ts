@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // define a schema for the notifications
 export const BuyerPersonaSchema = z.object({
-  name: z.string().describe('Nombre identificativo del buyer persona'),
+  name: z.string().describe('Nombre identificativo del buyer persona que representa al grupo de clientes ideales, esta información es obligatoria'),
   demographics: z.string().describe('Nombre ficticio, edad aproximada, formación académica, ciudad o región, ingresos brutos anuales'),
   family: z.string().describe('Integrantes de la unidad familiar, principales actividades de ocio, responsabilidades principales en el hogar'),
   work: z.string().describe('Empresa o centro donde trabaja, puesto o cargo desempeñado, retos o desafíos en el ámbito laboral, cómo influye su trabajo en su vida personal y viceversa'),
