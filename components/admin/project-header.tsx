@@ -12,15 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ProjectExtended } from "@/types/projects"
+import StatusBadge from "@/components/admin/status-badge"
 
 interface ProjectHeaderProps {
-  project: {
-    id: string
-    name: string
-    status: string
-    type: string,
-    slug: string
-  }
+  project: ProjectExtended
 }
 
 export function ProjectHeader({ project }: ProjectHeaderProps) {
@@ -58,16 +54,9 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
         <div className="flex items-center gap-2 text-sm text-slate-400">
           <span>{project.created}</span>
           <span>•</span>
-          <span>{project.type}</span>
+          <span>{project.projectType}</span>
           <span>•</span>
-          <Badge
-            variant="outline"
-            className={
-              project.status === "OK" ? "border-green-500 text-green-500" : "border-amber-500 text-amber-500"
-            }
-          >
-            {project.status}
-          </Badge>
+          <StatusBadge status={project.status} />
         </div>
       </div>
       <div className="flex items-center gap-2">
@@ -84,7 +73,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
             <DropdownMenuItem className="hover:bg-slate-900">
               <Link href={`/admin/projects/${project.slug}/edit`}>Editar proyecto</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-slate-900">Duplicar proyecto</DropdownMenuItem>
+            {/* <DropdownMenuItem className="hover:bg-slate-900">Duplicar proyecto</DropdownMenuItem> */}
             <DropdownMenuSeparator className="bg-slate-800" />
             <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500" onClick={() => handleDeleteProject(project.id, project.slug)}>
               Eliminar proyecto

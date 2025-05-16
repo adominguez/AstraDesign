@@ -16,6 +16,7 @@ import { MoreHorizontal, PlusCircle, Search, Layers, Eye } from "lucide-react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import AddButton from "../ui/AddButton"
+import StatusBadge from "./status-badge"
 
 
 export function ProjectsTable({ projects = [] }: { projects: any[] }) {
@@ -121,18 +122,7 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Estado</p>
-                    <Badge
-                      variant="outline"
-                      className={
-                        project.status === "OK"
-                          ? "border-green-500 text-green-500"
-                          : project.status === "CREATING"
-                            ? "border-amber-500 text-amber-500"
-                            : "border-red-500 text-red-500"
-                      }
-                    >
-                      {project.status}
-                    </Badge>
+                    <StatusBadge status={project.status} />
                   </div>
                 </div>
               </CardContent>
