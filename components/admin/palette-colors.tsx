@@ -30,11 +30,11 @@ export default function PaletteColors({projectDesign, className}: PaletteColorsP
                   <div className="flex items-center gap-2" key={color}>
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger asChild>
+                        <TooltipTrigger>
                           <div
                             className="w-6 h-6 rounded-full border border-slate-700"
                             style={{ backgroundColor: projectDesign[color as keyof typeof COLORS] }}
-                          ></div>
+                          />
                         </TooltipTrigger>
                         <TooltipContent className="bg-slate-950 border-slate-800 text-slate-300">
                           <span className="max-w-xs">{projectDesign[color as keyof typeof COLORS]}</span>
