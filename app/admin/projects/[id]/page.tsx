@@ -12,12 +12,13 @@ interface ProjectDetailPageProps {
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  // En una implementación real, aquí se cargarían los datos del proyecto desde una API o base de datos
   const projectId = params.id
   const user = await currentUser();
   const userId = user?.id as string;
 
   const project = await getProjectBySlug(projectId, userId)
+
+  console.log(project)
 
   return (
     <>
@@ -32,11 +33,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         <div className="space-y-6">
           <ProjectHeader project={project} />
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="md:col-span-1">
-              <ProjectInfo project={projectId} />
+            <div className="md:col-span-3">
+              <ProjectInfo project={project} />
             </div>
-            <div className="md:col-span-2">
-              <ProjectPages projectId={projectId} />
+            <div className="md:col-span-3">
+              <ProjectPages project={project} />
             </div>
           </div>
         </div>

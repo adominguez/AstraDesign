@@ -15,12 +15,12 @@ export default function PrincipalProjectInfo({ project, className }: PrincipalPr
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center justify-between">
             <span>Información del Proyecto</span>
-            <Link href={`/admin/projects/${project.slug}/edit`}>
+            {/* <Link href={`/admin/projects/${project.slug}/edit`}>
               <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white cursor-pointer">
                 <Edit className="h-4 w-4" />
                 <span className="sr-only">Editar</span>
               </Button>
-            </Link>
+            </Link> */}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
