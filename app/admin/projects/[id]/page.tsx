@@ -8,7 +8,7 @@ import Link from "next/link";
 interface ProjectDetailPageProps {
   params: {
     id: string
-  }
+  },
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {

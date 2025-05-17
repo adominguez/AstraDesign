@@ -3,18 +3,20 @@ import { SectionEditor } from "@/components/admin/section-editor"
 
 interface PageDetailProps {
   params: {
-    projectId: string
+    id: string
     pageId: string
   }
 }
 
 export default function PageDetail({ params }: PageDetailProps) {
-  const { projectId, pageId } = params
+  const { id, pageId } = params
+
+  console.log('PageDetail', { id, pageId })
 
   return (
     <div className="space-y-6">
-      <PageHeader projectId={projectId} pageId={pageId} />
-      <SectionEditor projectId={projectId} pageId={pageId} />
+      <PageHeader projectId={id} pageId={pageId} />
+      <SectionEditor projectId={id} pageId={pageId} />
     </div>
   )
 }
