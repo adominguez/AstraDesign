@@ -2,6 +2,7 @@ import { turso } from "@/lib/turso"
 import { deleteProjectFromCloudinary } from "@/lib/cloudinary"
 import { type ProjectDesign, type Project } from "@/types/projects"
 import { getPagesByProjectId } from "@/lib/pages"
+import { getSectionsByProjectId } from "@/lib/sections"
 
 const insertNewProject = async (project: Project) => {
 
@@ -222,6 +223,69 @@ const getProjectBySlug = async (slug: string, userId: string) => {
       const keywords = await getKeywordsByProjectId(id as string);
       const buyerPersona = await getBuyerPersonaByProjectId(id as string);
       const projectDesign = await getProjectDesignByProjectId(id as string);
+      const sections = await getSectionsByProjectId(id as string);
+      const pages = await getPagesByProjectId(id as string);
+      const { rows: projectDesignRows } = projectDesign;
+      const { rows: imagesRows } = images;
+      const { rows: keywordsRows } = keywords;
+      const { rows: buyerPersonaRows } = buyerPersona;
+      const imagesData = imagesRows.map(({ id, asset_folder, format, height, public_id, url, width }) => ({ id, assetFolder: asset_folder, format, height, publicId: public_id, url, width }));
+      const keywordsData = keywordsRows.map(({ id, keyword }) => ({ id, keyword }));
+      const projectData = {
+        userId,
+        id,
+        name,
+        description,
+        projectType,
+        status,
+        created,
+        slug,
+        images: imagesData,
+        keywords: keywordsData,
+        buyerPersona: buyerPersonaRows.length > 0 ? buyerPersonaRows[0] : null,
+        pages: pages.map((page) => ({
+          ...page,
+          sections: sections.filter((section) => section.pageId === page.id).sort((a, b) => a.sectionOrder - b.sectionOrder)
+        })),
+        projectDesign: projectDesignRows.length > 0 ? {
+          primaryColor: projectDesignRows[0].primary_color,
+          secondaryColor: projectDesignRows[0].secondary_color,
+          tertiaryColor: projectDesignRows[0].tertiary_color,
+          accentColor: projectDesignRows[0].accent_color,
+          textColor: projectDesignRows[0].text_color,
+          typography: projectDesignRows[0].typography
+        } : null
+      }
+      return projectData;
+    }
+  }
+  return null;
+}
+
+const getProjectForSections = async (projectId: string, userId: string) => {
+  if (!projectId || !userId) {
+    throw {
+      message: 'El ID del usuario y el proyecto son obligatorios',
+      status: 400,
+    }
+  }
+
+  const result = await turso.execute(
+    `SELECT * FROM projects WHERE id = ? AND user_id = ?`,
+    [projectId, userId]
+  );
+
+  if (result.rows.length === 0) {
+    return null
+  }
+
+  if (result.rows.length > 0) {
+    const { id, name, slug, description, project_type: projectType, status, created_at: created } = result.rows[0]
+    if (id) {
+      const images = await getImagesByProjectId(id as string);
+      const keywords = await getKeywordsByProjectId(id as string);
+      const buyerPersona = await getBuyerPersonaByProjectId(id as string);
+      const projectDesign = await getProjectDesignByProjectId(id as string);
       const pages = await getPagesByProjectId(id as string);
       const { rows: projectDesignRows } = projectDesign;
       const { rows: imagesRows } = images;
@@ -353,4 +417,4 @@ const deleteProject = async (projectId: string, userId: string, slug: string) =>
 }
 
 
-export { insertNewProject, getProjectsByUser, deleteProject, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus, insertProjectDesign };
+export { insertNewProject, getProjectForSections, getProjectsByUser, deleteProject, getProjectBySlug, getProjectById, insertNewImages, insertKeywords, updateProjectStatus, insertProjectDesign };

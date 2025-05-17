@@ -51,10 +51,7 @@ const getPagesByProjectId = async (projectId: string) => {
     [projectId]
   );
   if (result.rows.length === 0) {
-    throw {
-      message: 'No se encontraron páginas para este proyecto',
-      status: 404,
-    }
+    return [];
   }
   return result.rows.map((row: any) => ({
     id: row.id,
