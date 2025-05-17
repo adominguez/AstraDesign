@@ -1,3 +1,5 @@
+import { Section } from '@/types/sections'
+
 export interface Page {
   userId: string
   projectId: string
@@ -10,6 +12,7 @@ export interface Page {
 
 export interface PageExtended extends Page {
   id: string
+  sections: Section[]
   createdAt: string
   updatedAt: string
 }
