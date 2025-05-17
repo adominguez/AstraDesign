@@ -1,13 +1,13 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { File } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { ProjectExtended } from "@/types/projects"
 import NewPageFormDialog from "./new-page-form-dialog"
 import { type PageExtended } from "@/types/pages"
 import PageCard from "@/components/admin/page-card"
+import EmptyZone from "@/components/admin/empty-zone"
 
 interface ProjectPagesProps {
-  project: ProjectExtended
+  project: ProjectExtended,
 }
 
 export function ProjectPages({ project }: ProjectPagesProps) {
@@ -31,13 +31,7 @@ export function ProjectPages({ project }: ProjectPagesProps) {
       <CardContent>
         <div className="space-y-4">
           {pages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <File className="h-12 w-12 text-slate-700 mb-4" />
-              <h3 className="text-lg font-medium">No hay páginas creadas</h3>
-              <p className="text-sm text-slate-500 mt-1 max-w-md">
-                Crea tu primera página para comenzar a diseñar tu sitio web. Cada página puede tener hasta 5 secciones.
-              </p>
-            </div>
+            <EmptyZone title="No hay páginas creadas" text="Crea tu primera página para comenzar a diseñar tu sitio web. Cada página puede tener hasta 5 secciones." />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {pages.map((page: PageExtended) => (
