@@ -158,10 +158,10 @@ const getSectionsById = async (id: string) => {
   return result.rows[0];
 }
 
-const generateImageForSection = async (id: string) => {
+const generateImageForSection = async (sectionId: string) => {
 
   // Obtenemos la sección por ID
-  const section = await getSectionsById(id);
+  const section = await getSectionsById(sectionId);
 
   if (!section) {
     throw { message: 'No se ha encontrado la sección', status: 404 };
