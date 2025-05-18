@@ -90,3 +90,21 @@ export const deleteProjectFromCloudinary = async (route: string) => {
   await cloudinary.api.delete_resources_by_prefix(route);
   await cloudinary.api.delete_folder(route);
 }
+
+export const uploadImageToCloudinary = async (imageBytes: Buffer, config: UploadApiOptions | undefined, projectId: string | undefined) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      config, // Opcional: especifica una carpeta
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+
+    // Pasar el buffer al stream
+    stream.end(imageBytes);
+  });
+}

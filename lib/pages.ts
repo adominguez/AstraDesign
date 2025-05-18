@@ -67,4 +67,18 @@ const getPagesByProjectId = async (projectId: string) => {
   }));
 }
 
-export { insertNewPage, getPagesByProjectId, updatePageStatus };
+const getPageById = async (id: string) => {
+  if (!id) {
+    throw { message: 'El ID de la página es obligatorio', status: 400 };
+  }
+  const result = await turso.execute(
+    `SELECT * FROM pages WHERE id = ?`,
+    [id]
+  );
+  if (result.rows.length === 0) {
+    return null;
+  }
+  return result.rows[0];
+}
+
+export { insertNewPage, getPagesByProjectId, updatePageStatus, getPageById };
