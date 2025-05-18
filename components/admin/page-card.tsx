@@ -1,11 +1,7 @@
 import { PageExtended } from "@/types/pages";
 import StatusBadge from "@/components/admin/status-badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge"
 import {
-  Edit,
-  Eye,
   File,
   FileText,
   Home,
@@ -18,6 +14,7 @@ import {
 import { ProjectExtended } from "@/types/projects";
 import Link from "next/link";
 import PageCardSections from "@/components/admin/page-card-sections";
+import CompleteImageDialog from "@/components/admin/complete-image-dialog";
 
 interface PageCardProps {
   page: PageExtended
@@ -92,22 +89,13 @@ export default function PageCard({page, project}: PageCardProps) {
           </div>
           <div className="flex items-center gap-1 col-span-2">
             <StatusBadge status={page.status} />
+            {
+              page.sections.some(section => section.images && section.images.length > 0) ? (<CompleteImageDialog page={page} />) : null
+            }
           </div>
         </div>
         <PageCardSections sections={page.sections} page={page} />
       </CardContent>
-      {/* <CardFooter className="p-4 pt-0">
-        <Link href={`/admin/projects/${project.slug}/pages/${page.slug}`} className="w-full">
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer w-full border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800"
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Ver página
-          </Button>
-        </Link>
-      </CardFooter> */}
     </Card>
   )
 }
