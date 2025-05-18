@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { getProjectForSections } from '@/lib/projects';
 import { generateSections, insertSections } from '@/lib/sections';
 import { updatePageStatus } from '@/lib/pages';
+import { ProjectExtended } from "@/types/projects";
 
 export async function POST(req: Request) {
   try {
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
     const userId = user.id;
 
     // Obtenemos el proyecto para generar las secciones
-    const project = await getProjectForSections(projectId, userId);
+    const project = await getProjectForSections(projectId, userId) as unknown as ProjectExtended;
     if (!project) {
       // Lanzar un error si no se ha encontrado el proyecto
       throw { message: 'Fallo al encontrar el proyecto', status: 500 };

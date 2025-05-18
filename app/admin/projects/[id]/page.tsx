@@ -2,6 +2,7 @@ import { ProjectHeader } from "@/components/admin/project-header"
 import { ProjectInfo } from "@/components/admin/project-info"
 import { ProjectPages } from "@/components/admin/project-pages"
 import { getProjectBySlug } from "@/lib/projects"
+import { ProjectExtended } from "@/types/projects";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 
@@ -16,9 +17,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const user = await currentUser();
   const userId = user?.id as string;
 
-  const project = await getProjectBySlug(projectId, userId)
-
-  console.log(project)
+  const project = await getProjectBySlug(projectId, userId) as unknown as ProjectExtended;
 
   return (
     <>

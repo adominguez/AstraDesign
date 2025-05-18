@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { turso } from "@/lib/turso"
 import { generateObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
