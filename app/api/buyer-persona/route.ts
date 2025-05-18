@@ -1,6 +1,5 @@
-import { streamText, streamObject } from 'ai';
+import { streamObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { z } from 'zod';
 import { BuyerPersonaSchema } from './schema';
 
 export async function POST(request: Request) {

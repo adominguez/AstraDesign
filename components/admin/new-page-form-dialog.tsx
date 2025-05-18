@@ -80,7 +80,7 @@ export default function NewPageFormDialog({ projectId, pagesUsed, maxPages }: Ne
       body,
     }).then((res) => {
       if (res.status === 200) {
-        res.json().then((data) => {
+        res.json().then(() => {
           setIsLoading(false)
           form.reset()
 

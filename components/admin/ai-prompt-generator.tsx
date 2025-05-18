@@ -91,6 +91,7 @@ export function AIPromptGenerator({ sectionType, onGenerateContent }: AIPromptGe
       setGenerationResult("¡Contenido generado con éxito!")
       onGenerateContent(generatedContent)
     } catch (error) {
+      console.error("Error generating content:", error);
       setGenerationResult("Error al generar el contenido. Inténtalo de nuevo.")
     } finally {
       setIsGenerating(false)

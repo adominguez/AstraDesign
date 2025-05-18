@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getAuth, currentUser } from "@clerk/nextjs/server";
 import { turso } from "@/lib/turso";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextApiRequest) {
   const { userId } = getAuth(req);
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User not authenticated' }), {

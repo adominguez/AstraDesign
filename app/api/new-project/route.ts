@@ -1,5 +1,3 @@
-import { generateObject } from 'ai';
-import { openai } from '@ai-sdk/openai';
 import { currentUser } from "@clerk/nextjs/server";
 import { insertNewProject, insertNewImages, insertKeywords, updateProjectStatus, insertProjectDesign } from '@/lib/projects';
 import { createSlug } from '@/lib/utils';

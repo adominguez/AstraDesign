@@ -1,6 +1,4 @@
 import { ProjectsTable } from "@/components/admin/projects-table"
-import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
 import { currentUser } from "@clerk/nextjs/server";
 import { getProjectsByUser } from "@/lib/projects"
 
