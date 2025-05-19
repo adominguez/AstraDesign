@@ -1,7 +1,7 @@
 import { turso } from "@/lib/turso"
 import { deleteProjectFromCloudinary } from "@/lib/cloudinary"
 import { type ProjectDesign, type Project } from "@/types/projects"
-import { getPagesByUserId } from "@/lib/pages"
+import { deletePagesByProjectId, getPagesByUserId } from "@/lib/pages"
 import { getPagesByProjectId } from "@/lib/pages"
 import { getSectionsByProjectId } from "@/lib/sections"
 
@@ -414,9 +414,25 @@ const deleteProject = async (projectId: string, userId: string, slug: string) =>
     await deleteProjectFromCloudinary(`${userId}/projects/${projectId}-${slug}`);
   }
 
+
+  // Eliminar páginas asociadas al proyecto
+  await deletePagesByProjectId(projectId);
+
   // Eliminar las palabras clave asociadas al proyecto
   await turso.execute(
     `DELETE FROM keywords WHERE project_id = ?`,
+    [projectId]
+  );
+
+  // Eliminar el buyer persona asociado al proyecto
+  await turso.execute(
+    `DELETE FROM buyer_personas WHERE project_id = ?`,
+    [projectId]
+  );
+
+  // Eliminar el diseño del proyecto
+  await turso.execute(
+    `DELETE FROM projects_design WHERE project_id = ?`,
     [projectId]
   );
 

@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     const accentColor = form.get('accentColor')?.toString() ?? '';
     const textColor = form.get('textColor')?.toString() ?? '';
     const typography = form.get('typography')?.toString() ?? '';
-    const images = form.getAll('images') as File[];
+    // const images = form.getAll('images') as File[];
     
     // Obtenemos el usuario actual
     const user = await currentUser();
@@ -83,23 +83,23 @@ export async function POST(req: Request) {
     await insertProjectDesign({ projectId, projectDesign });
 
     // Guardamos las imágenes en Cloudinary
-    if (images && images.length > 0) {
-      const imageUrls = await uploadImagesToCloudinary(
-        images,
-        {
-          folder: `${userId}/projects/${projectId}-${slug}`,
-          public_id: `${userId}-${slug}`,
-          overwrite: true,
-          resource_type: 'image',
-        }, projectId
-      );
+    // if (images && images.length > 0) {
+    //   const imageUrls = await uploadImagesToCloudinary(
+    //     images,
+    //     {
+    //       folder: `${userId}/projects/${projectId}-${slug}`,
+    //       public_id: `${userId}-${slug}`,
+    //       overwrite: true,
+    //       resource_type: 'image',
+    //     }, projectId
+    //   );
 
-      // Guardamos las URLs de las imágenes en la base de datos
-      await insertNewImages({
-        projectId, // Asegúrate de obtener el ID del proyecto creado
-        imageUrls
-      });
-    }
+    //   // Guardamos las URLs de las imágenes en la base de datos
+    //   await insertNewImages({
+    //     projectId, // Asegúrate de obtener el ID del proyecto creado
+    //     imageUrls
+    //   });
+    // }
 
     // Actualizamos el estado del proyecto a "completado"
     await updateProjectStatus({ projectId, status: 'OK' });

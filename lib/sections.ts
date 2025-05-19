@@ -292,4 +292,29 @@ const insertNewSectionImage = async ({imageData, sectionId, projectId, pageId}) 
   return { success: true };
 }
 
-export { generateSections, insertSections, getSectionsByProjectId, updateSectionStatus, generateImageForSection, insertNewSectionImage };
+const deleteGeneratedImagesByProjectId = async (projectId: string) => {
+  if (!projectId) {
+    throw { message: 'El ID del proyecto es obligatorio', status: 400 };
+  }
+  await turso.execute(
+    `DELETE FROM generated_images WHERE project_id = ?`,
+    [projectId]
+  );
+  return { success: true };
+}
+
+const deleteSectionsByProjectId = async (projectId: string) => {
+  if (!projectId) {
+    throw { message: 'El ID del proyecto es obligatorio', status: 400 };
+  }
+
+  await deleteGeneratedImagesByProjectId(projectId);
+
+  await turso.execute(
+    `DELETE FROM sections WHERE project_id = ?`,
+    [projectId]
+  );
+  return { success: true };
+}
+
+export { generateSections, insertSections, getSectionsByProjectId, updateSectionStatus, generateImageForSection, insertNewSectionImage, deleteGeneratedImagesByProjectId, deleteSectionsByProjectId };

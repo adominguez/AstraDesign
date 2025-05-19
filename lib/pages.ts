@@ -1,5 +1,6 @@
 import { turso } from "@/lib/turso"
 import { type Page } from "@/types/pages"
+import { deleteSectionsByProjectId } from "@/lib/sections"
 
 const insertNewPage = async (page: Page) => {
   const { userId, projectId, title, description, slug, pageType, status } = page
@@ -107,4 +108,19 @@ const getPagesByUserId = async (userId: string) => {
   }));
 }
 
-export { insertNewPage, getPagesByUserId, getPagesByProjectId, updatePageStatus, getPageById };
+const deletePagesByProjectId = async (projectId: string) => {
+  if (!projectId) {
+    throw { message: 'El ID del proyecto es obligatorio', status: 400 };
+  }
+
+  // Eliminar las páginas asociadas al proyecto
+  await deleteSectionsByProjectId(projectId);
+
+  await turso.execute(
+    `DELETE FROM pages WHERE project_id = ?`,
+    [projectId]
+  );
+  return { success: true };
+}
+
+export { insertNewPage, getPagesByUserId, getPagesByProjectId, updatePageStatus, getPageById, deletePagesByProjectId };
