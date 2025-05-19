@@ -7,11 +7,7 @@ export default async function ProjectsPage() {
   const user = await currentUser();
   const userId = user?.id as string;
 
-  const result = await getProjectsByUser(userId);
-
-  const projects = result.rows.map(({ id, name, project_type: type, status, pages = 0, slug, created_at: created }) => ({ id, name, type, status, pages, slug, created }))
-
-  console.log('projects', projects)
+  const projects = await getProjectsByUser(userId);
 
   return (
     <div className="space-y-6">

@@ -118,7 +118,7 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
                     <p className="text-xs text-slate-500">Páginas</p>
-                    <p>{project.pages}</p>
+                    <p>{!project.pages ? 0 : project.pages.length}</p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Estado</p>
@@ -126,17 +126,6 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link href={`/admin/projects/${project.slug}`} className="w-full">
-                  <Button
-                    variant="outline"
-                    className="w-full border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    Ver Proyecto
-                  </Button>
-                </Link>
-              </CardFooter>
             </Card>
           ))}
 

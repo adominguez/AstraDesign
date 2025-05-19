@@ -1,6 +1,7 @@
 import { turso } from "@/lib/turso"
 import { deleteProjectFromCloudinary } from "@/lib/cloudinary"
 import { type ProjectDesign, type Project } from "@/types/projects"
+import { getPagesByUserId } from "@/lib/pages"
 import { getPagesByProjectId } from "@/lib/pages"
 import { getSectionsByProjectId } from "@/lib/sections"
 
@@ -333,7 +334,17 @@ const getProjectsByUser = async (userId: string) => {
     [userId]
   );
 
-  return result;
+  if (result.rows.length === 0) {
+    return null
+  }
+
+  const pages = await getPagesByUserId(userId);
+  return result.rows.map((row: any) => ({
+    ...row,
+    type: row.project_type,
+    created: row.created_at,
+    pages: pages.filter((page) => page.projectId === row.id)
+  }));
 }
 
 const getAllProjects = async () => {

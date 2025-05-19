@@ -81,4 +81,30 @@ const getPageById = async (id: string) => {
   return result.rows[0];
 }
 
-export { insertNewPage, getPagesByProjectId, updatePageStatus, getPageById };
+const getPagesByUserId = async (userId: string) => {
+  if (!userId) {
+    throw { message: 'El ID del usuario es obligatorio', status: 400 };
+  }
+
+  const result = await turso.execute(
+    `SELECT * FROM pages WHERE user_id = ?`,
+    [userId]
+  );
+  if (result.rows.length === 0) {
+    return [];
+  }
+  return result.rows.map((row: any) => ({
+    id: row.id,
+    userId: row.user_id,
+    projectId: row.project_id,
+    title: row.title,
+    description: row.description,
+    slug: row.slug,
+    pageType: row.page_type,
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }));
+}
+
+export { insertNewPage, getPagesByUserId, getPagesByProjectId, updatePageStatus, getPageById };
