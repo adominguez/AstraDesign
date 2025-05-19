@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { projectsTypes, colorPalettes, typographyStyles } from "@/lib/constants"
+import { projectsTypes, typographyStyles } from "@/lib/constants"
 import InfoTooltip from "@/components/ui/info-tooltip"
 import ColorSelectable from "./color-selectable"
 import AddButton from "../ui/AddButton"
@@ -24,7 +24,7 @@ export function NewProjectForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingKeyword, setIsLoadingKeyword] = useState(false)
   const [keywordInput, setKeywordInput] = useState("")
-  const [uploadedImages, setUploadedImages] = useState<File[]>([])
+  // const [uploadedImages, setUploadedImages] = useState<File[]>([])
 
   const formSchema = z.object({
     name: z.string().min(3, {
@@ -44,17 +44,17 @@ export function NewProjectForm() {
     tertiaryColor: z.string().optional(),
     accentColor: z.string().optional(),
     textColor: z.string().optional(),
-    typography: z.enum(["sans", "sans-serif", "monospace", "display", "handwritten"], ),
+    typography: z.enum(["serif", "sans-serif", "monospace", "display", "handwritten"], ),
     images: z.any().optional(),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Publimark",
-      projectType: "agencia-marketing-diseno",
-      description: "Agencia de marketing que se dedica a realizar posicionamiento de marcas",
-      keywords: ['marketing', 'diseño', 'branding'],
+      name: "",
+      projectType: "pagina-corporativa",
+      description: "",
+      keywords: [],
       primaryColor: "#1b263b",
       secondaryColor: "#415a77",
       tertiaryColor: "#778da9",
@@ -99,7 +99,7 @@ export function NewProjectForm() {
           const { slug } = data
           setIsLoading(false)
           form.reset()
-          setUploadedImages([])
+          // setUploadedImages([])
 
           // Redireccionar a la página del proyecto
           window.location.href = `/admin/projects/${slug}`
@@ -142,20 +142,20 @@ export function NewProjectForm() {
     }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files)
-      setUploadedImages((prev) => [...prev, ...newFiles])
-    }
-  }
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     const newFiles = Array.from(e.target.files)
+  //     setUploadedImages((prev) => [...prev, ...newFiles])
+  //   }
+  // }
 
-  const removeImage = (index: number) => {
-    setUploadedImages((prev) => prev.filter((_, i) => i !== index))
-  }
+  // const removeImage = (index: number) => {
+  //   setUploadedImages((prev) => prev.filter((_, i) => i !== index))
+  // }
 
-  useEffect(() => {
-    form.setValue('images', uploadedImages);
-  }, [uploadedImages])
+  // useEffect(() => {
+  //   form.setValue('images', uploadedImages);
+  // }, [uploadedImages])
 
   const onChangeColors = (colors: { primary: string | undefined; secondary: string | undefined; tertiary: string | undefined; accent: string | undefined; text: string | undefined }) => {
     form.setValue("primaryColor", colors.primary)
@@ -532,7 +532,7 @@ export function NewProjectForm() {
             />
 
             {/* Subir imágenes */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="images"
               render={() => (
@@ -593,7 +593,7 @@ export function NewProjectForm() {
                   </FormControl>
                 </FormItem>
               )}
-            />
+            /> */}
           </CardContent>
           <CardFooter className="border-t border-slate-800 px-6 py-4">
             <AddButton type="submit" disabled={isLoading}>
