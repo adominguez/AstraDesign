@@ -8,9 +8,10 @@ import EmptyZone from "@/components/admin/empty-zone"
 
 interface ProjectPagesProps {
   project: ProjectExtended,
+  showProjectTitle?: Boolean
 }
 
-export function ProjectPages({ project }: ProjectPagesProps) {
+export function ProjectPages({ project, showProjectTitle }: ProjectPagesProps) {
 
   const { pages } = project
 
@@ -23,7 +24,7 @@ export function ProjectPages({ project }: ProjectPagesProps) {
     <Card className="bg-slate-900/50 border-slate-800 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>Páginas del Proyecto</CardTitle>
+          <CardTitle>{ showProjectTitle ? project.name : 'Páginas del Proyecto' }</CardTitle>
           <CardDescription>Gestiona las páginas de tu sitio web</CardDescription>
         </div>
         <NewPageFormDialog projectId={project.id} pagesUsed={pagesUsed} maxPages={maxPages} />

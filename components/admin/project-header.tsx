@@ -70,9 +70,6 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
           <DropdownMenuContent align="end" className="bg-slate-950 border-slate-800 text-slate-300">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-slate-800" />
-            <DropdownMenuItem className="hover:bg-slate-900">
-              <Link href={`/admin/projects/${project.slug}/edit`}>Editar proyecto</Link>
-            </DropdownMenuItem>
             {/* <DropdownMenuItem className="hover:bg-slate-900">Duplicar proyecto</DropdownMenuItem> */}
             <DropdownMenuSeparator className="bg-slate-800" />
             <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500" onClick={() => handleDeleteProject(project.id, project.slug)}>

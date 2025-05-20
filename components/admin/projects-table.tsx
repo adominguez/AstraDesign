@@ -19,7 +19,7 @@ import AddButton from "../ui/AddButton"
 import StatusBadge from "./status-badge"
 
 
-export function ProjectsTable({ projects = [] }: { projects: any[] }) {
+export function ProjectsTable({ projects = [], notShowToolbar }: { projects: any[], notShowToolbar?: boolean }) {
   const [searchTerm, setSearchTerm] = useState("")
 
   const filteredProjects = projects.filter(
@@ -47,24 +47,26 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
-          <Input
-            type="search"
-            placeholder="Buscar proyectos..."
-            className="w-full bg-slate-900 border-slate-800 pl-8 text-sm text-slate-400 focus-visible:ring-indigo-600"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Link href="/admin/projects/new">
-          <AddButton>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Nuevo Proyecto
-          </AddButton>
-        </Link>
-      </div>
+      {
+        !notShowToolbar && (<div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Input
+              type="search"
+              placeholder="Buscar proyectos..."
+              className="w-full bg-slate-900 border-slate-800 pl-8 text-sm text-slate-400 focus-visible:ring-indigo-600"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Link href="/admin/projects/new">
+            <AddButton>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Nuevo Proyecto
+            </AddButton>
+          </Link>
+        </div>)
+      }
       {filteredProjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center bg-slate-900/50 border border-slate-800 rounded-lg backdrop-blur-sm">
           <Layers className="h-12 w-12 text-slate-700 mb-4" />
@@ -101,7 +103,6 @@ export function ProjectsTable({ projects = [] }: { projects: any[] }) {
                       <Link href={`/admin/projects/${project.slug}`}>
                         <DropdownMenuItem className="hover:bg-slate-900">Ver detalles</DropdownMenuItem>
                       </Link>
-                      <DropdownMenuItem className="hover:bg-slate-900">Editar proyecto</DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-slate-800" />
                       <DropdownMenuItem className="text-red-500 hover:bg-slate-900 hover:text-red-500" onClick={() => handleDeleteProject(project.id, project.slug)}>
                         Eliminar proyecto

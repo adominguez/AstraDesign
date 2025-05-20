@@ -85,16 +85,20 @@ export default function PageCard({page, project}: PageCardProps) {
         <div className="grid grid-cols-2 gap-2 text-xs text-slate-400">
           <div className="flex items-center gap-1">
             <Layers className="h-3.5 w-3.5" />
-            <span>{page.sections.length} secciones</span>
+            {
+              page.sections ? <span>{page.sections.length} secciones</span> : null
+            }
           </div>
           <div className="flex items-center gap-1 col-span-2">
             <StatusBadge status={page.status} />
             {
-              page.sections.some(section => section.images && section.images.length > 0) ? (<CompleteImageDialog page={page} />) : null
+              page.sections && page.sections.some(section => section.images && section.images.length > 0) ? (<CompleteImageDialog page={page} />) : null
             }
           </div>
         </div>
-        <PageCardSections sections={page.sections} page={page} />
+        {
+          page.sections ? <PageCardSections sections={page.sections} page={page} /> : null
+        }
       </CardContent>
     </Card>
   )
