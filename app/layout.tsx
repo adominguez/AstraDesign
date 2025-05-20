@@ -1,9 +1,6 @@
 import { type Metadata } from 'next'
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedOut,
 } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
 import { esES } from '@clerk/localizations'
@@ -32,19 +29,13 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="es">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-indexBackground`}>
           <ClerkProvider
               appearance={{
                 baseTheme: dark,
               }}
               localization={esES}
             >
-              <SignedOut>
-                <header className="flex justify-end items-center p-4 gap-4 h-16">
-                  <SignInButton mode='modal' />
-                  <SignUpButton mode='modal' />
-                </header>
-              </SignedOut>
               {children}
           </ClerkProvider>
         </body>
