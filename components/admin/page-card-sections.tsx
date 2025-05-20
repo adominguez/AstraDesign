@@ -83,12 +83,19 @@ export default function PageCardSections({ sections = [], page }: PageCardSectio
                     <div className="flex items-center gap-2">
                       <span>{section.title}</span>
                     </div>
-                    <button
-                      className="text-slate-400 hover:text-slate-200"
-                      onClick={() => handleGenerateImage(section)}
-                    >
-                      Generar imagen
-                    </button>
+                    <AddButton className="mt-2 flex" onClick={() => handleGenerateImage(section)} disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Loader className="animate-spin h-4 w-4" />
+                          <span>Generando imagen...</span>
+                        </>
+                      ) : (
+                        <>
+                          <PlusCircle className="h-4 w-4" />
+                          <span>Generar imagen</span>
+                        </>
+                      )}
+                    </AddButton>
                   </div>
                   </>
                 )

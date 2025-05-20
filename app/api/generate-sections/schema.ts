@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const SectionSchema = z.object({
   title: z.string().describe("Título visible y legible de la sección"),
   description: z.string().describe("Explicación detallada de la función UX/SEO de esta sección, añade los textos que deberían de aparecer las secciones, CTA...,"),
-  sectionType: z.string().describe("Tipo de sección, como 'hero', 'features', 'testimonials', etc."),
+  sectionType: z.string().describe("Tipo de sección, como 'hero', 'features', 'testimonials', etc. sólo debe de ser una palabra que lo defina"),
 });
 
 export const PageSectionsSchema = z.object({

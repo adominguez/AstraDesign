@@ -233,6 +233,7 @@ Estas son las instrucciones que debes seguir:
 - Muy importante, La imágen **debe ser completa, no pueden aparecer cortadas**, ocupando el ancho total de la pantalla cuando sean imágenes de portada (Hero o banners destacados).
 - El ancho total del contenido principal debe ser **1024px centrado**, salvo en las imágenes de portada o banners destacados que deben ocupar el ancho completo de la pantalla, el ancho total de la imagen debe de ser 1536px.
 - Evita sugerir imágenes verticales o recortadas.
+- Las imágenes no deben de tener transparencia.
 - A menos que el usuario diga lo contrario, los textos deben de estar en español.
 - Evita a toda costa las faltas de ortografía en los textos.
 - Usa un estilo visual limpio, moderno y atractivo, evitando el uso de imágenes de baja calidad o poco profesionales.
