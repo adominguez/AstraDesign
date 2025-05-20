@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
         <ProjectsTable projects={projects} notShowToolbar />
       </div>
       {
-        projects.length ? (
+        projects && projects.length ? (
           <div className="grid gap-6">
             <h2 className="text-2xl font-bold tracking-tight">Páginas</h2>
             {

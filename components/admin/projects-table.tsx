@@ -22,7 +22,7 @@ import StatusBadge from "./status-badge"
 export function ProjectsTable({ projects = [], notShowToolbar }: { projects: any[], notShowToolbar?: boolean }) {
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredProjects = projects.filter(
+  const filteredProjects = projects && projects.filter(
     (project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,7 +67,7 @@ export function ProjectsTable({ projects = [], notShowToolbar }: { projects: any
           </Link>
         </div>)
       }
-      {filteredProjects.length === 0 ? (
+      {filteredProjects && filteredProjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center bg-slate-900/50 border border-slate-800 rounded-lg backdrop-blur-sm">
           <Layers className="h-12 w-12 text-slate-700 mb-4" />
           <h3 className="text-lg font-medium">No se encontraron proyectos</h3>
@@ -77,7 +77,7 @@ export function ProjectsTable({ projects = [], notShowToolbar }: { projects: any
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project) => (
+          {(filteredProjects || []).map((project) => (
             <Card key={project.id} className="bg-slate-900/50 border-slate-800 backdrop-blur-sm overflow-hidden">
               <div className={`h-1 w-full ${project.status === "OK" ? "bg-green-600" : project.status === "CREATING" ? "bg-amber-600" : "bg-red-600"}`} />
               <CardHeader className="p-4">
