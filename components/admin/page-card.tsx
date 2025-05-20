@@ -70,7 +70,7 @@ export default function PageCard({page, project}: PageCardProps) {
             <div className="p-2 rounded-md bg-indigo-900/30 text-indigo-400">{getPageIcon(page.pageType)}</div>
             <div>
               <CardTitle className="text-base flex items-center gap-2">
-                <Link href={`/admin/projects/${project.slug}/pages/${page.slug}`} className="cursor-pointer hover:text-indigo-400 transition-colors">
+                <Link href={`/admin/projects/${project.slug}`} className="cursor-pointer hover:text-indigo-400 transition-colors">
                   {page.title}
                 </Link>
               </CardTitle>
