@@ -14,17 +14,6 @@ export function Sidebar() {
       <div className="flex-1 overflow-auto py-2">
         <Navigation />
       </div>
-      <div className="border-t border-slate-800 p-4">
-        <div className="flex items-center gap-3 rounded-lg bg-slate-900 px-3 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-700">
-            <span className="text-xs font-bold">AD</span>
-          </div>
-          <div>
-            <p className="text-sm font-medium">Admin</p>
-            <p className="text-xs text-slate-400">admin@spacedesign.com</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
